@@ -4,13 +4,6 @@ from tensorflow.keras.models import Model
 from tensorflow.keras.applications import MobileNetV2
 from keras.callbacks import ModelCheckpoint, ReduceLROnPlateau, EarlyStopping
 
-
-def augmentation(n):
-    for j in data_augmentation:
-        n = j(n)
-    return n
-
-
 # Directories
 data_directory = "Consolidated_data"
 model_file = "models/dummy.keras"
