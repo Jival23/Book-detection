@@ -1,7 +1,6 @@
 import tensorflow as tf
 from keras.utils import load_img, img_to_array
 import numpy as np
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 test_individual_images = False
 validation_file = "validation"
@@ -17,16 +16,16 @@ def prepareImage(pathForImage):
     return imgResult
 
 if not test_individual_images:
-    validation_augmentation = ImageDataGenerator(
-        rescale=1.0/255
+    rescale_data = tf.keras.layers.Rescaling(1.0 / 255)
+
+    validation_data = tf.keras.utils.image_dataset_from_directory(
+        validation_file,
+        image_size=(224, 224),
+        batch_size=32,
+        label_mode='categorical'
     )
 
-    validation_data = validation_augmentation.flow_from_directory (
-        validation_file,
-        target_size=(224, 224),
-        batch_size=32,
-        class_mode='categorical'
-    )
+    validation_data = validation_data.map(lambda x, y: (rescale_data(x), y))
 
     test_loss, test_acc = model.evaluate(validation_data)
 else:
